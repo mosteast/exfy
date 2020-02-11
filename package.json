@@ -1,7 +1,7 @@
 {
   "name": "exfy",
   "description": "Make js and ts executable by adding/replacing shebangs.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/mosteast/exfy",
   "repository": "github:mosteast/exfy",
   "main": "build/index.js",
