@@ -1,1 +1,2 @@
-export * from './src'
+export { exfy } from './src/main'
+
