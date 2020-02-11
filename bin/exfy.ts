@@ -45,7 +45,7 @@ require('yargs')
         })
     },
     async handler(args) {
-      await exfy(args)
+      await exfy(args).catch(console.error)
     },
   })
 

@@ -1,4 +1,4 @@
-import { pwd } from 'shelljs'
+import { chmod, pwd } from 'shelljs'
 import { extname, resolve } from 'path'
 import { trim, trimEnd } from 'lodash'
 import { readFileSync, writeFileSync } from 'fs'
@@ -32,40 +32,35 @@ export async function exfy(opt?: T_opt_exfy) {
   const parts = parse_regex_str(match)
   const re = new RegExp(parts[0], parts[1])
 
-  return new Promise((resolve, reject) => {
+  walk(path, { max_depth: level }, (path, stat) => {
+    if (stat.isFile()) {
+      let ext = trim(extname(path), '.')
 
-    const e = walk(path, { max_depth: level }, (path, stat) => {
-      if (stat.isFile()) {
-        let ext = trim(extname(path), '.')
+      if (!ext || !extensions.includes(ext)) {return}
 
-        if (!ext || !extensions.includes(ext)) {return}
+      const o = (readFileSync(path)).toString()
+      let n: string = o
 
-        const o = (readFileSync(path)).toString()
-        let n: string = o
-
-        if (re.test(o)) {
-          if (!o.startsWith(shebang)) {
-            n = o.replace(re, shebang)
-          }
-        } else {
-          n = shebang + '\n\n' + o
+      if (re.test(o)) {
+        if (o.startsWith(shebang)) {
+          return
         }
 
-        if (keep_extensions) {
-          ext = ''
-        }
+        n = o.replace(re, shebang)
 
-        const n_path = trimEnd(path.slice(0, -(ext.length)), '.')
-
-        writeFileSync(n_path, n)
+      } else {
+        n = shebang + '\n\n' + o
       }
-    })
 
-    e.on('end', () => {
-      resolve()
-    })
+      if (keep_extensions) {
+        ext = ''
+      }
 
-    e.on('error', reject)
+      const n_path = trimEnd(path.slice(0, -(ext.length)), '.')
+
+      writeFileSync(n_path, n)
+      chmod('-R', '+x', n_path)
+    }
   })
 }
 
