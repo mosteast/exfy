@@ -17,7 +17,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  // rm('-fr', path_asset)
+  rm('-fr', path_asset)
 })
 
 it('exfy', async (done) => {
