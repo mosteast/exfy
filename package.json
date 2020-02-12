@@ -7,7 +7,7 @@
   "main": "build/index.js",
   "type": "build/index.d.ts",
   "bin": {
-    "exfy": "bin/exfy.ts"
+    "exfy": "bin/exfy.js"
   },
   "files": [
     "build/"
