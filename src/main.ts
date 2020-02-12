@@ -1,18 +1,15 @@
-import { chmod, pwd, ls } from 'shelljs'
+import { readFileSync } from 'fs'
+import { stat, writeFile } from 'fs-extra'
+import { trim } from 'lodash'
 import { extname, relative, resolve } from 'path'
-import { trim, trimEnd } from 'lodash'
-import { readFileSync, writeFileSync } from 'fs'
-import walk = require('walkdir')
-import { readdir, stat, writeFile } from 'fs-extra'
-
-const walker = require('walker')
+import { chmod, ls, pwd } from 'shelljs'
 
 export interface T_opt_exfy {
   paths?: string[]
-  extensions?: string[]
+  ext?: string[]
   level?: number
   match?: string
-  result_extension?: string
+  out_ext?: string
   shebang?: string
 }
 
@@ -26,9 +23,9 @@ export const opt_def: T_opt_exfy = {
   level: 0,
   match: '/^#!.+$/m',
   paths: [ './' ],
-  extensions: [ '.js', '.mjs' ],
+  ext: [ '.js', '.mjs' ],
   shebang: N_shebang,
-  result_extension: '',
+  out_ext: '',
 }
 
 export async function exfy(opt: T_opt_exfy, state: T_exfy_state) {
@@ -72,10 +69,10 @@ export function calc_level(from: string, to: string): number {
  * exfy a single file
  * @param path
  */
-export async function exfy_file(path: string, { extensions, shebang, match }: T_opt_exfy,
+export async function exfy_file(path: string, { ext, shebang, match, out_ext }: T_opt_exfy,
 ) {
-  let ext = extname(path)
-  if ( ! ext || ! extensions?.includes(ext)) {return}
+  let ext_o = extname(path)
+  if ( ! ext_o || ! ext?.includes(ext_o)) {return}
 
   const o = (readFileSync(path)).toString()
   let n: string = ''
@@ -91,7 +88,7 @@ export async function exfy_file(path: string, { extensions, shebang, match }: T_
     n = shebang + '\n\n' + o
   }
 
-  const n_path = path.slice(0, -(ext.length))
+  const n_path = path.slice(0, -(ext_o.length)) + out_ext
 
   await writeFile(n_path, n)
   chmod('+x', n_path)

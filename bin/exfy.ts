@@ -21,14 +21,14 @@ require('yargs')
             default: opt_def.shebang,
             describe: 'Custom shebang "#!/path/to/env runner"',
           },
-          extensions: {
+          ext: {
             type: 'array',
-            default: opt_def.extensions,
+            default: opt_def.ext,
             describe: 'Target file extensions to match, can pass multiple extension by: `-e .ext1 -e .ext2`',
           },
-          result_extension: {
+          out_ext: {
             type: 'string',
-            default: opt_def.result_extension,
+            default: opt_def.out_ext,
             describe: 'Set result extensions or not: `--result_extension .js`',
           },
           match: {
