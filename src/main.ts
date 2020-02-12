@@ -14,7 +14,10 @@ export interface T_opt_exfy {
 }
 
 export interface T_exfy_state {
-  initial_path: string
+  /**
+   * Working directory
+   */
+  wd: string
 }
 
 export const N_shebang = '#!/usr/bin/env node'
@@ -44,7 +47,7 @@ export async function exfy(opt: T_opt_exfy, state: T_exfy_state) {
     if (st.isFile()) {
       await exfy_file(it, opt)
     } else if (st.isDirectory()) {
-      if (level && calc_level(state.initial_path, it) > level) {
+      if (level && calc_level(state.wd, it) > level) {
         continue
       }
       await exfy({ ...opt, paths: lls(it) }, state)

@@ -41,7 +41,7 @@ require('yargs')
         })
     },
     async handler(args) {
-      await exfy(args, { initial_path: cwd() }).catch(console.error)
+      await exfy(args, { wd: cwd() }).catch(console.error)
     },
   })
   .argv

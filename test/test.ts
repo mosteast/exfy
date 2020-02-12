@@ -84,7 +84,7 @@ it('exfy with level 2', async () => {
 
 it('exfy with shebang', async () => {
   const shebang = '#!/bin/sh'
-  await exfy({ paths: [ path_tmp ], shebang: shebang }, { initial_path: __dirname })
+  await exfy({ paths: [ path_tmp ], shebang: shebang }, { wd: __dirname })
   expect(readFileSync(path_tmp + '/a').toString()).toBe(
     shebang + '\n\n' + readFileSync(path_tmp + '/a.js').toString())
   expect(readFileSync(path_tmp + '/aa').toString()).toBe(
@@ -97,7 +97,7 @@ it('exfy with shebang', async () => {
 
 it('exfy with result_extension', async () => {
   const extension = '.run'
-  await exfy({ paths: [ path_tmp ], out_ext: extension }, { initial_path: __dirname })
+  await exfy({ paths: [ path_tmp ], out_ext: extension }, { wd: __dirname })
   expect(() => { readFileSync(path_tmp + `/a1/a1${extension}`)}).not.toThrow()
   expect(() => { readFileSync(path_tmp + `/b1/b1${extension}`)}).not.toThrow()
   expect(() => { readFileSync(path_tmp + `/b1/b2/b2${extension}`)}).not.toThrow()
@@ -107,9 +107,9 @@ it('exfy with result_extension', async () => {
 })
 
 async function run_recursive() {
-  await exfy({ paths: [ path_tmp ] }, { initial_path: __dirname })
+  await exfy({ paths: [ path_tmp ] }, { wd: __dirname })
 }
 
 async function run_level(level: number) {
-  await exfy({ paths: [ path_tmp ], level }, { initial_path: __dirname })
+  await exfy({ paths: [ path_tmp ], level }, { wd: __dirname })
 }
