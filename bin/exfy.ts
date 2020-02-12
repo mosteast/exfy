@@ -1,53 +1,46 @@
 #!/usr/bin/env ts-node
-
-import { exfy } from '../src/main'
+import { cwd, exfy, opt_def } from '../src/main'
 
 require('yargs')
   .command({
-    command: '$0 <path> [--level|-l] [--output_dir|-o] [--shebang] [--extensions|-e] [--keep_extensions] [--match]',
+    command: '$0 <paths..>',
     builder(argv) {
       return argv
         .positional('path', {
           array: true,
-          type: 'string',
           desc: 'Directories or files to add shebang, use `.` for current directory',
         })
         .options({
-          output_dir: {
-            type: 'string',
-            describe: 'Output directory to store converted files, default: same directory',
-          },
           level: {
             type: 'number',
             describe: '0 for Recursive convert (convert sub-directories)',
-            default: 1,
+            default: opt_def.level,
           },
           shebang: {
             type: 'string',
-            default: '#!/usr/bin/env node',
+            default: opt_def.shebang,
             describe: 'Custom shebang "#!/path/to/env runner"',
           },
           extensions: {
             type: 'array',
-            default: [ 'js', 'mjs' ],
-            describe: 'Can pass multiple extension by: `-e ext1 -e ext2`',
+            default: opt_def.extensions,
+            describe: 'Target file extensions to match, can pass multiple extension by: `-e .ext1 -e .ext2`',
           },
-          keep_extensions: {
-            type: 'boolean',
-            default: false,
-            describe: 'Remove extensions or not',
+          result_extension: {
+            type: 'string',
+            default: opt_def.result_extension,
+            describe: 'Set result extensions or not: `--result_extension .js`',
           },
           match: {
             type: 'string',
-            default: '/^#!.+$/m',
+            default: opt_def.match,
             describe: 'Regex to match shebang',
           },
         })
     },
     async handler(args) {
-      await exfy(args).catch(console.error)
+      await exfy(args, { initial_path: cwd() }).catch(console.error)
     },
   })
-
   .argv
 
