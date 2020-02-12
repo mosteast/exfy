@@ -6,13 +6,14 @@ require('yargs')
     command: '$0 <paths..>',
     builder(argv) {
       return argv
-        .positional('path', {
+        .positional('paths', {
           array: true,
           desc: 'Directories or files to add shebang, use `.` for current directory',
         })
         .options({
           level: {
             type: 'number',
+            alias: 'l',
             describe: '0 for Recursive convert (convert sub-directories)',
             default: opt_def.level,
           },
@@ -23,6 +24,7 @@ require('yargs')
           },
           ext: {
             type: 'array',
+            alias: 'e',
             default: opt_def.ext,
             describe: 'Target file extensions to match, can pass multiple extension by: `-e .ext1 -e .ext2`',
           },
